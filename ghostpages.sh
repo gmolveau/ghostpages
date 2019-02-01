@@ -42,10 +42,6 @@ install() {
 	fi
 }
 
-list() {
-    node_modules/ghost-cli/bin/ghost ls
-}
-
 push() {
 	if [ ! -d static ]; then
 		_exit_with_error "no static folder. Please generate one.\nAborting.";
@@ -95,9 +91,6 @@ case "$1" in
         install
         run
     ;;
-    "list"|"l")
-        list
-    ;;
     "push"|"publish"|"deploy"|"p")
         push
     ;;
@@ -112,7 +105,6 @@ case "$1" in
         echo "    backup | b"
         echo "    generate | gen | g"
         echo "    install | i"
-        echo "    list | l"
         echo "    publish | push | p | deploy"
         echo "    run | r"
         exit 1
