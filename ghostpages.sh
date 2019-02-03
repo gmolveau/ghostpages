@@ -1,5 +1,7 @@
 #!/bin/sh
 
+GHOST_FOLDER="blog"
+
 _exit_with_error() {
     echo >&2 $1;
     exit 1;
@@ -7,7 +9,7 @@ _exit_with_error() {
 
 backup() {
     BACKUP_NAME="ghost_backup_$(date +%Y_%m_%d)"
-    zip -r $BACKUP_NAME ./ghost/content ./ghost/db.sqlite
+    zip -r $BACKUP_NAME $GHOST_FOLDER/content $GHOST_FOLDER/db.sqlite
 }
 
 generate() {
@@ -34,11 +36,11 @@ install() {
 		_exit_with_error "this version of nodejs (${NODE_VERSION}) is not compatible. \nhttps://docs.ghost.org/faq/node-versions \nAborting.";
 	fi
 	npm install ghost-cli@latest ghost-static-site-generator
-	if [ -d ghost ]; then
+	if [ -d $GHOST_FOLDER ]; then
 		echo >&2 "ghost folder already exists. Skipping initialization.";
 	else
-		mkdir -p ghost
-		node_modules/ghost-cli/bin/ghost install local --no-start --enable --port 2373 --dir ./ghost --url localhost:2373 --db sqlite3 --dbpath $(pwd)/ghost/db.sqlite
+		mkdir -p $GHOST_FOLDER
+		node_modules/ghost-cli/bin/ghost install local --no-start --enable --port 2373 --dir $GHOST_FOLDER --url localhost:2373 --db sqlite3 --dbpath $(pwd)/$GHOST_FOLDER/db.sqlite
 	fi
 }
 
@@ -77,7 +79,7 @@ push() {
 }
 
 run() {
-    node_modules/ghost-cli/bin/ghost start --dir ./ghost
+    node_modules/ghost-cli/bin/ghost start --dir $GHOST_FOLDER
 }
 
 case "$1" in
